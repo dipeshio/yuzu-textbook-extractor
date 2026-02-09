@@ -1,0 +1,6 @@
+node_modules/
+.playwright-mcp/
+.vscode/
+docs/
+*.har
+package-lock.json

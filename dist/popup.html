@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yuzu Extractor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 340px;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e94560;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h1 .icon { font-size: 20px; }
+
+    .subtitle {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #2a2a4a;
+      padding-bottom: 12px;
+    }
+
+    .section {
+      margin-bottom: 14px;
+    }
+
+    .section label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .option-row input[type="checkbox"] {
+      accent-color: #e94560;
+      width: 14px;
+      height: 14px;
+    }
+
+    .option-row span {
+      font-size: 12px;
+    }
+
+    input[type="number"] {
+      background: #16213e;
+      border: 1px solid #2a2a4a;
+      color: #e0e0e0;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      width: 80px;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #e94560;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-row button {
+      flex: 1;
+      padding: 12px 8px;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #btn-extract {
+      background: linear-gradient(135deg, #e94560, #c23152);
+    }
+
+    #btn-extract:hover {
+      background: linear-gradient(135deg, #ff6b81, #e94560);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+    }
+
+    #btn-markdown {
+      background: linear-gradient(135deg, #4e54c8, #3b3f9e);
+    }
+
+    #btn-markdown:hover {
+      background: linear-gradient(135deg, #6c72e8, #4e54c8);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(78, 84, 200, 0.3);
+    }
+
+    #btn-extract:active {
+      transform: translateY(0);
+    }
+
+    #btn-extract:disabled,
+    #btn-markdown:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #status-area {
+      margin-top: 12px;
+      min-height: 60px;
+    }
+
+    .status-msg {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .status-msg.info {
+      background: #16213e;
+      color: #7ec8e3;
+      border-left: 3px solid #7ec8e3;
+    }
+
+    .status-msg.success {
+      background: #1a3a2a;
+      color: #4ecca3;
+      border-left: 3px solid #4ecca3;
+    }
+
+    .status-msg.error {
+      background: #3a1a1a;
+      color: #ff6b6b;
+      border-left: 3px solid #ff6b6b;
+    }
+
+    .status-msg.warn {
+      background: #3a3a1a;
+      color: #f0c040;
+      border-left: 3px solid #f0c040;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #2a2a4a;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar .fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e94560, #ff6b81);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .tip {
+      font-size: 10px;
+      color: #666;
+      margin-top: 12px;
+      line-height: 1.4;
+      border-top: 1px solid #2a2a4a;
+      padding-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1><span class="icon">📖</span> Yuzu Extractor</h1>
+  <p class="subtitle">Extract sections as clean, printable PDFs</p>
+
+  <div class="section">
+    <label>Options</label>
+    <div class="option-row">
+      <input type="checkbox" id="opt-strip-ui" checked>
+      <span>Strip reader UI elements</span>
+    </div>
+    <div class="option-row">
+      <input type="checkbox" id="opt-fix-print" checked>
+      <span>Override print-blocking CSS</span>
+    </div>
+    <div class="option-row">
+      <input type="checkbox" id="opt-auto-scroll" checked>
+      <span>Auto-scroll to force-load all content</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <label>Scroll speed (ms per step)</label>
+    <input type="number" id="opt-scroll-delay" value="100" min="30" max="500" step="10">
+  </div>
+
+  <div class="btn-row">
+    <button id="btn-extract">🖨️ Print PDF</button>
+    <button id="btn-markdown">📝 Download .md</button>
+  </div>
+
+  <div id="status-area"></div>
+
+  <div class="progress-bar"><div class="fill" id="progress-fill"></div></div>
+
+  <p class="tip">
+    💡 Navigate to the desired section in Yuzu Reader first.<br>
+    <b>Print PDF</b> — visual output via browser print dialog.<br>
+    <b>Download .md</b> — Markdown with LaTeX math, ideal for LLMs.
+  </p>
+
+  <script src="popup.js"></script>
+</body>
+</html>
