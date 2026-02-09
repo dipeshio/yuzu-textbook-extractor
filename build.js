@@ -8,27 +8,37 @@ const JavaScriptObfuscator = require('javascript-obfuscator');
 const SRC = path.join(__dirname, 'extension');
 const DIST = path.join(__dirname, 'dist');
 
-// Obfuscation config — medium protection, keeps it functional in MV3 service worker
+// Obfuscation config — maximum protection while keeping MV3 service worker compatible
 const OBF_OPTIONS = {
   compact: true,
   controlFlowFlattening: true,
-  controlFlowFlatteningThreshold: 0.6,
+  controlFlowFlatteningThreshold: 1,
   deadCodeInjection: true,
-  deadCodeInjectionThreshold: 0.3,
-  debugProtection: false,
-  identifierNamesGenerator: 'hexadecimal',
-  renameGlobals: false,           // keep chrome.* APIs intact
-  selfDefending: false,           // breaks in strict-mode service workers
+  deadCodeInjectionThreshold: 1,
+  debugProtection: false,            // breaks in service worker context
+  disableConsoleOutput: false,       // need console for debugging
+  identifierNamesGenerator: 'mangled-shuffled',
+  numbersToExpressions: true,
+  renameGlobals: false,              // keep chrome.* APIs intact
+  selfDefending: false,              // breaks in strict-mode service workers
+  simplify: true,
   splitStrings: true,
-  splitStringsChunkLength: 8,
+  splitStringsChunkLength: 3,
   stringArray: true,
   stringArrayCallsTransform: true,
-  stringArrayEncoding: ['base64'],
+  stringArrayCallsTransformThreshold: 1,
+  stringArrayEncoding: ['rc4'],      // rc4 is much harder to reverse than base64
+  stringArrayIndexesType: ['hexadecimal-number', 'hexadecimal-numeric-string'],
+  stringArrayIndexShift: true,
   stringArrayRotate: true,
   stringArrayShuffle: true,
-  stringArrayThreshold: 0.7,
+  stringArrayWrappersCount: 3,
+  stringArrayWrappersChainedCalls: true,
+  stringArrayWrappersParametersMaxCount: 5,
+  stringArrayWrappersType: 'function',
+  stringArrayThreshold: 1,
   transformObjectKeys: true,
-  unicodeEscapeSequence: false,
+  unicodeEscapeSequence: true,
   target: 'browser',
 };
 
