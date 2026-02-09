@@ -39,6 +39,12 @@ const OBF_OPTIONS = {
   stringArrayThreshold: 1,
   transformObjectKeys: true,
   unicodeEscapeSequence: true,
+  reservedNames: [
+    'extractContentFromFrame',
+    'extractContentFromWrapperFrame',
+    'extractMarkdownFromFrame',
+    'performAutoScroll',
+  ],
   target: 'browser',
 };
 
@@ -46,7 +52,7 @@ const OBF_OPTIONS = {
 const JS_FILES = ['background.js', 'popup.js', 'print.js'];
 
 // Files/dirs to copy as-is
-const COPY_FILES = ['manifest.json', 'popup.html', 'print.html'];
+const COPY_FILES = ['manifest.json', 'popup.html', 'print.html', 'injected.js'];
 const COPY_DIRS = ['icons'];
 
 // ── Clean & create dist ────────────────────────────────────
