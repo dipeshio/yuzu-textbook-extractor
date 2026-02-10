@@ -5,3 +5,4 @@ docs/
 *.har
 package-lock.json
 extension/
+build.js
