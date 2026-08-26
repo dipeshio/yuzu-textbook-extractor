@@ -11,7 +11,7 @@
     "downloads"
   ],
   "host_permissions": [
-    "*://reader.yuzu.com/*",
+    "*://reader2.yuzu.com/*",
     "*://jigsaw.yuzu.com/*"
   ],
   "background": {
