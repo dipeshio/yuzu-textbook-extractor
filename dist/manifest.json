@@ -12,7 +12,9 @@
   ],
   "host_permissions": [
     "*://reader.yuzu.com/*",
-    "*://jigsaw.yuzu.com/*"
+    "*://jigsaw.yuzu.com/*",
+    "*://reader2.yuzu.com/*",
+    "*://yuzu.vitalsource.com/*"
   ],
   "background": {
     "service_worker": "background.js"
